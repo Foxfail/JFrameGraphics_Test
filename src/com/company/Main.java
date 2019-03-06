@@ -52,7 +52,7 @@ class MyJPanel extends JPanel implements MouseInputListener {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(400, 400);
+        return new Dimension(800, 800);
     }
 
     @Override
@@ -97,7 +97,6 @@ class MyJPanel extends JPanel implements MouseInputListener {
         x = e.getX() - (ovalWidth / 2);
         y = e.getY() - (ovalHeight / 2);
         getGraphics().fillOval(x,y,ovalWidth,ovalHeight);
-
     }
 
     @Override
