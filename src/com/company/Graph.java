@@ -1,6 +1,8 @@
 package com.company;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Класс отвечающий за математическое представление направленного графа
@@ -8,25 +10,26 @@ import java.util.HashMap;
  * где ключем является узлами, а значения ключей - связанные узлы с этим узлом
  * и вес ребер до этого узла, хранящиеся также в хеш-таблице. Таким образом
  * получается массив вида:
- *
+ * <p>
  * [
  * "key-NodeName"-[ "NodeName2"-"LineWeight1",
  * "NodeName3"-"LineWeight2"],
- *
+ * <p>
  * "key-NodeName2"-["NodeName4"-"LineWeight3"],
- *
+ * <p>
  * "key-NodeName3"-["NodeName4"-"LineWeight4"],
- *
- * "key-NodeName4"-[   ]
+ * <p>
+ * "key-NodeName4"-[            ]
  * ]
- *
+ * <p>
  * методы:
  * мне нужно по имени узла смочь получить все узлы к которым
  * идет направленное ребро графа, а также их вес
- *
+ * методо getLinkedNodes возвращает объект позволяющий взаимодействовать со связанными узлами
+ * <p>
  * вес ребра графа
  * имя узла ребра
- *
+ * <p>
  * наполнить можно методами
  * после выполнения конструктора поле должно быть уже не-null
  * в поле передаем имя узла и узлы с которыми он связана
@@ -66,7 +69,38 @@ public class Graph {
         graphHashMap.put(nodeName, connectedNodes);
     }
 
-    public HashMap<String, Integer> getRelatedNodes(String nodeName) {
-        return graphHashMap.get(nodeName);
+    /**
+     * Добавляет связь к уже существующему узлу, если связь уже существует заменяет её значение
+     *
+     * @param sourceNode откуда связь выходит
+     * @param value      вес ребра связи
+     * @param nextNode   куда ребро идет
+     */
+    public void addLinkedNode(String sourceNode, Integer value, String nextNode) {
+        if (!graphHashMap.containsKey(sourceNode)) {
+            putNode(sourceNode);
+        }
+        graphHashMap.get(sourceNode).put(nextNode, value);
     }
+
+    /**
+     * Из графа возвращает по имени узла все связанные узлы вместе с весами в виде LinkedNodes
+     *
+     * @param nodeName исходный узел
+     * @return linkedNodes в классе которого указаны все связанные узлы и веса.
+     */
+    public LinkedNodes getLinkedNodes(String nodeName) {
+        LinkedNodes linkedNodes = new LinkedNodes();
+        HashMap<String, Integer> linkedNodesHashMap = graphHashMap.get(nodeName);
+
+        Iterator iterator = linkedNodesHashMap.keySet().iterator();
+        //noinspection WhileLoopReplaceableByForEach
+        while (iterator.hasNext()) {
+            //noinspection unchecked
+            Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) iterator.next();
+            linkedNodes.addLink(entry.getKey(), entry.getValue());
+        }
+        return linkedNodes;
+    }
+
 }

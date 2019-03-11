@@ -2,6 +2,7 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 /**
  * В этом классе реализовано окно и все компоненты окна
@@ -11,17 +12,19 @@ import java.awt.*;
  */
 
 public class MyJFrame extends JFrame {
+    private MyJPanel panel;
+    private Button button1;
 
     //CONSTRUCTOR
     public MyJFrame() throws HeadlessException {
         super();
-        MyJPanel panel = new MyJPanel(this);
+        panel = new MyJPanel(this);
 
         add(panel);
         panel.addMouseListener(panel);
         panel.addMouseMotionListener(panel);
 
-        Button button1 = new Button("Кнопа");
+        button1 = new Button("Кнопа");
 
         add(button1, BorderLayout.SOUTH);
 
@@ -35,5 +38,13 @@ public class MyJFrame extends JFrame {
 
     public void showWindow() {
         setVisible(true);
+    }
+
+    public Graphics getPanelGraphics() {
+        return panel.getGraphics();
+    }
+
+    public void setOnButtonClickListener(ActionListener listener) {
+        button1.addActionListener(listener);
     }
 }
