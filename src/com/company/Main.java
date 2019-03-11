@@ -18,14 +18,15 @@ public class Main {
         graph.addLinkedNode("thirdFromFirst", 7, "ForthFromThird");
 
 
-        int y = myJFrame.getHeight() / 2;
-        Point firstElemPos = new Point(10, y);
-
-        GraphToGraphicsAdapter graphToGraphicsAdapter = new GraphToGraphicsAdapter(graph, myJFrame.getPanelGraphics(), firstElemPos);
-
         myJFrame.setOnButtonClickListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // расчет точки рисования
+                int y = myJFrame.getHeight() / 2;
+                Point firstElemPos = new Point(10, y);
+
+                // сбо всего воедино и рисование
+                GraphToGraphicsAdapter graphToGraphicsAdapter = new GraphToGraphicsAdapter(graph, myJFrame.getPanelGraphics(), firstElemPos);
                 graphToGraphicsAdapter.testdraw();
             }
         });

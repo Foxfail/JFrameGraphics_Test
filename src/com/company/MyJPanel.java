@@ -80,13 +80,13 @@ public class MyJPanel extends JPanel implements MouseInputListener {
     @Override
     public void mouseMoved(MouseEvent e) {
         System.out.println("moved");
-        x = e.getX() - (ovalWidth / 2);
-        y = e.getY() - (ovalHeight / 2);
-
-        Graphics g = getGraphics();
-        g.setColor(Color.RED);
-        g.drawOval(x, y, ovalWidth, ovalHeight);
-        repaint();
+//        x = e.getX() - (ovalWidth / 2);
+//        y = e.getY() - (ovalHeight / 2);
+//
+//        Graphics g = getGraphics();
+//        g.setColor(Color.RED);
+//        g.drawOval(x, y, ovalWidth, ovalHeight);
+//        repaint();
     }
 
 }
