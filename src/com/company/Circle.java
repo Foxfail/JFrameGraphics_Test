@@ -22,12 +22,18 @@ public class Circle {
     }
 
     public void draw(Graphics graphics) {
+        Color defaultColor = graphics.getColor();
         graphics.setColor(Color.BLACK);
-        graphics.fillOval(center.x - (radius / 2) - border, center.y - (radius / 2) - border, (radius) + (border * 2), (radius) + (border * 2));
+        graphics.fillOval(
+                center.x - (radius / 2) - border,
+                center.y - (radius / 2) - border,
+                (radius) + (border * 2),
+                (radius) + (border * 2));
         graphics.setColor(color);
-        graphics.fillOval(center.x - (radius / 2), center.y - (radius / 2), radius, radius);
-        graphics.setColor(Color.BLACK);
-
+        graphics.fillOval(
+                center.x - (radius / 2),
+                center.y - (radius / 2), radius, radius);
+        graphics.setColor(defaultColor);
     }
 
 }

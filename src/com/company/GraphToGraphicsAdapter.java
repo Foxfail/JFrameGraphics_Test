@@ -69,28 +69,35 @@ public class GraphToGraphicsAdapter {
     }
 
     public void testdraw() {
+        int lineStroke = 2;
 
         Circle circle1 = new Circle(firstElemPos, radius, border, Color.RED);
         circle1.draw(graphics);
-
 
         Point secondElement = new Point(firstElemPos.x + stepX, firstElemPos.y - stepY / 2);
         Circle circle2 = new Circle(secondElement, radius, border, Color.GREEN);
         circle2.draw(graphics);
 
-        int lineBeginX = firstElemPos.x + radius / 2;     // правая граница круга
-        int lineBeginY = firstElemPos.y; // центр круга
-        graphics.drawLine(lineBeginX, lineBeginY, secondElement.x - radius / 2, secondElement.y);
+        Point p1 = new Point(
+                firstElemPos.x + radius / 2 + lineStroke,    // правая граница круга
+                firstElemPos.y                                  // центр круга
+        );
+        Point p2 = new Point(
+                (secondElement.x - radius / 2) - lineStroke, // левая граница круга
+                secondElement.y                                 // центр круга
+        );
 
+        ((Graphics2D) graphics).setStroke(new BasicStroke(lineStroke));
+        graphics.drawLine(p1.x, p1.y, p2.x, p2.y);
 
         Point thirdElement = new Point(secondElement.x, firstElemPos.y + stepY);
         Circle circle3 = new Circle(thirdElement, radius, border, Color.BLUE);
         circle3.draw(graphics);
 
 
-        lineBeginX = firstElemPos.x + radius / 2;     // правая граница круга
-        lineBeginY = firstElemPos.y; // центр круга
+        p1.x = firstElemPos.x + radius / 2;     // правая граница круга
+        p1.y = firstElemPos.y;                  // центр круга
 //        graphics.drawLine( lineBeginX, lineBeginY, lineBeginX+stepX-(radius/2),lineBeginY+stepY+(radius/6));
-        graphics.drawLine(lineBeginX, lineBeginY, thirdElement.x - radius / 2, thirdElement.y);
+        graphics.drawLine(p1.x, p1.y, thirdElement.x - radius / 2, thirdElement.y);
     }
 }
