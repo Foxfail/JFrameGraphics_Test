@@ -43,10 +43,11 @@ import java.awt.*;
  * Расстояние вверх/вниз между несколькими узлами одного шага
  */
 
+@SuppressWarnings("WeakerAccess")
 public class GraphToGraphicsAdapter {
     Graphics graphics;
     Graph graph;
-    Point firstElemPos;
+    Point circle1point;
 
     // на самом деле это диаметр, надо както это поправить в классе Круг
     int radius = 20;
@@ -64,40 +65,72 @@ public class GraphToGraphicsAdapter {
     public GraphToGraphicsAdapter(Graph graph, Graphics graphics, Point firstElemPos) {
         this.graph = graph;
         this.graphics = graphics;
-        this.firstElemPos = firstElemPos;
+        this.circle1point = firstElemPos;
         firstElemPos.x = firstElemPos.x + 50;
     }
 
+    private void testMeasureLines() {
+        graphics.setColor(Color.GREEN);
+        graphics.drawLine(0, 800, 500, 800);
+        graphics.setColor(Color.RED);
+        graphics.drawLine(0, 737, 500, 737);
+        graphics.setColor(Color.GREEN);
+        graphics.drawLine(0, 700, 500, 700);
+        graphics.drawLine(0, 600, 500, 600);
+        graphics.drawLine(0, 500, 500, 500);
+        graphics.setColor(Color.RED);
+        graphics.drawLine(0, 400, 500, 400);
+        graphics.setColor(Color.GREEN);
+        graphics.drawLine(0, 300, 500, 300);
+        graphics.drawLine(0, 200, 500, 200);
+        graphics.drawLine(0, 100, 500, 100);
+        graphics.drawLine(0, 0, 500, 0);
+        graphics.setColor(Color.BLACK);
+    }
+
     public void testdraw() {
+        //TODO тут надо понять алгоритм, как это всё загнать в цикл
+        // как упростить, может вынести какие то элементы в классы
+        // сейчас я думаю что надо круги вынести в отдельный стек массивов,
+        // и отрисовывать их по шагам. т.е. берем сверху первый элемент - это первый шаг, начало пути
+        // далее берем второй элемент стека - это будет массив с узлами прилегающими к первому узлу
+        // далее берем третий элемент стека - это будет массив с узлами прилегающими ко всем элементам из второго шага
+        // и вот тут начинаются проблемы, потому что надо хранить, отрисовывать связи, между узлами
+        // либо их надо записывать в отдельный стек и рисовать потом
+        // (на самом деле рисовать надо первыми связи, а потом узлы, чтобы можно было ребро отрисовать от центра
+        // узла до другого центра узла - так красивее) либо рисовать всё вместе, либо рисовать сначала одну ветку,
+        // затем другую, но как в таком случае отобразить связи к одинаковым узлам?
+
         int lineStroke = 2;
 
-        Circle circle1 = new Circle(firstElemPos, radius, border, Color.RED);
+        Circle circle1 = new Circle(circle1point, radius, border, Color.RED);
         circle1.draw(graphics);
 
-        Point secondElement = new Point(firstElemPos.x + stepX, firstElemPos.y - stepY / 2);
-        Circle circle2 = new Circle(secondElement, radius, border, Color.GREEN);
+        Point circle2point = new Point(circle1point.x + stepX, circle1point.y - stepY);
+        Circle circle2 = new Circle(circle2point, radius, border, Color.GREEN);
         circle2.draw(graphics);
 
-        Point p1 = new Point(
-                firstElemPos.x + radius / 2 + lineStroke,    // правая граница круга
-                firstElemPos.y                                  // центр круга
-        );
-        Point p2 = new Point(
-                (secondElement.x - radius / 2) - lineStroke, // левая граница круга
-                secondElement.y                                 // центр круга
-        );
+        Point p1 = new Point();
+        Point p2 = new Point();
 
-        ((Graphics2D) graphics).setStroke(new BasicStroke(lineStroke));
-        graphics.drawLine(p1.x, p1.y, p2.x, p2.y);
+        p1.x = circle1point.x + radius / 2 + lineStroke;        // правая граница круга
+        p1.y = circle1point.y;                                  // центр круга
+        p2.x = (circle2point.x - radius / 2) - lineStroke;     // левая граница круга
+        p2.y = circle2point.y;                                 // центр круга
 
-        Point thirdElement = new Point(secondElement.x, firstElemPos.y + stepY);
-        Circle circle3 = new Circle(thirdElement, radius, border, Color.BLUE);
+        MyLine line1 = new MyLine(p1, p2, Color.BLACK, lineStroke);
+        line1.draw(graphics);
+
+        Point circle3point = new Point(circle2point.x, circle1point.y + stepY);
+        Circle circle3 = new Circle(circle3point, radius, border, Color.BLUE);
         circle3.draw(graphics);
 
+        p1.x = (circle1point.x + (radius / 2)) + lineStroke;    // правая граница круга
+        p1.y = circle1point.y;                                  // центр круга
+        p2.x = (circle3point.x - (radius / 2)) + lineStroke;    // левая граница круга
+        p2.y = circle3point.y;                                  // центр круга
 
-        p1.x = firstElemPos.x + radius / 2;     // правая граница круга
-        p1.y = firstElemPos.y;                  // центр круга
-//        graphics.drawLine( lineBeginX, lineBeginY, lineBeginX+stepX-(radius/2),lineBeginY+stepY+(radius/6));
-        graphics.drawLine(p1.x, p1.y, thirdElement.x - radius / 2, thirdElement.y);
+        MyLine line2 = new MyLine(p1, p2, Color.BLACK, lineStroke);
+        line2.draw(graphics);
     }
 }

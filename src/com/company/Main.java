@@ -8,6 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         MyJFrame myJFrame = new MyJFrame();
+        myJFrame.setBounds(600, 200, 700, 700);
         myJFrame.showWindow();
 
         Graph graph = new Graph();
@@ -17,12 +18,11 @@ public class Main {
         graph.addLinkedNode("secondFromFirst", 5, "ForthFromSecond");
         graph.addLinkedNode("thirdFromFirst", 7, "ForthFromThird");
 
-
         myJFrame.setOnButtonClickListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // расчет точки рисования
-                int y = myJFrame.getHeight() / 2;
+                int y = myJFrame.getContentPane().getHeight() / 2;
                 Point firstElemPos = new Point(10, y);
 
                 // сбо всего воедино и рисование

@@ -21,6 +21,10 @@ public class Circle {
         this.radius = radius;
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     public void draw(Graphics graphics) {
         Color defaultColor = graphics.getColor();
         graphics.setColor(Color.BLACK);
@@ -32,7 +36,9 @@ public class Circle {
         graphics.setColor(color);
         graphics.fillOval(
                 center.x - (radius / 2),
-                center.y - (radius / 2), radius, radius);
+                center.y - (radius / 2),
+                (radius),
+                (radius));
         graphics.setColor(defaultColor);
     }
 

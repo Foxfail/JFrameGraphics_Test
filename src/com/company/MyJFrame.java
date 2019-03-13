@@ -24,7 +24,7 @@ public class MyJFrame extends JFrame {
         panel.addMouseListener(panel);
         panel.addMouseMotionListener(panel);
 
-        button1 = new Button("Кнопа");
+        button1 = new Button("Рисуй, машина!");
 
         add(button1, BorderLayout.SOUTH);
 
