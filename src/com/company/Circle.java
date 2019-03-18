@@ -10,15 +10,24 @@ import java.awt.*;
  * Также можно указать толщину границы, и цвет внутренностей круга
  */
 public class Circle {
-    Color color;
-    int border, radius;
-    Point center;
+    private Color color;
+    private int border, radius;
+    private Point center;
 
     public Circle(Point center, int radius, int border, Color color) {
         this.color = color;
         this.border = border;
         this.center = center;
         this.radius = radius;
+    }
+
+    public Circle(Point center, Color color) {
+        this.color = color;
+        this.center = center;
+
+        // установка параметров по умолчанию
+        this.border = 3;
+        this.radius = 20;
     }
 
     public void setColor(Color color) {
@@ -42,4 +51,11 @@ public class Circle {
         graphics.setColor(defaultColor);
     }
 
+    public int getRadius() {
+        return radius;
+    }
+
+    public Point getCenter() {
+        return center;
+    }
 }

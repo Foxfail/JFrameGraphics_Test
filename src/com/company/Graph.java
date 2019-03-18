@@ -103,4 +103,7 @@ public class Graph {
         return linkedNodes;
     }
 
+    public Iterator getIterator() {
+        return graphHashMap.keySet().iterator();
+    }
 }

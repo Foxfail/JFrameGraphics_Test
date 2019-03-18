@@ -101,36 +101,29 @@ public class GraphToGraphicsAdapter {
         // узла до другого центра узла - так красивее) либо рисовать всё вместе, либо рисовать сначала одну ветку,
         // затем другую, но как в таком случае отобразить связи к одинаковым узлам?
 
-        int lineStroke = 2;
-
-        Circle circle1 = new Circle(circle1point, radius, border, Color.RED);
+        // круг 1
+        Circle circle1 = new Circle(circle1point, Color.RED);
         circle1.draw(graphics);
 
+        // круг 2
+        // считаем центр для круга 2 на основании координат первого круга
         Point circle2point = new Point(circle1point.x + stepX, circle1point.y - stepY);
-        Circle circle2 = new Circle(circle2point, radius, border, Color.GREEN);
+        Circle circle2 = new Circle(circle2point, Color.GREEN);
         circle2.draw(graphics);
 
-        Point p1 = new Point();
-        Point p2 = new Point();
-
-        p1.x = circle1point.x + radius / 2 + lineStroke;        // правая граница круга
-        p1.y = circle1point.y;                                  // центр круга
-        p2.x = (circle2point.x - radius / 2) - lineStroke;     // левая граница круга
-        p2.y = circle2point.y;                                 // центр круга
-
-        MyLine line1 = new MyLine(p1, p2, Color.BLACK, lineStroke);
+        // линия от первого круга до второго
+        MyLine line1 = new MyLine(circle1, circle2);
         line1.draw(graphics);
 
+        // круг 3
         Point circle3point = new Point(circle2point.x, circle1point.y + stepY);
-        Circle circle3 = new Circle(circle3point, radius, border, Color.BLUE);
+        Circle circle3 = new Circle(circle3point, Color.CYAN);
         circle3.draw(graphics);
 
-        p1.x = (circle1point.x + (radius / 2)) + lineStroke;    // правая граница круга
-        p1.y = circle1point.y;                                  // центр круга
-        p2.x = (circle3point.x - (radius / 2)) + lineStroke;    // левая граница круга
-        p2.y = circle3point.y;                                  // центр круга
-
-        MyLine line2 = new MyLine(p1, p2, Color.BLACK, lineStroke);
+        // линия от круга 1 до круга 3
+        MyLine line2 = new MyLine(circle1, circle3);
         line2.draw(graphics);
+
+
     }
 }
