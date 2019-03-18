@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * Класс отвечающий за математическое представление направленного графа
@@ -39,15 +39,16 @@ import java.util.Map;
  */
 public class Graph {
     //            имя узла | имя связанного узла|вес ребра
-    private HashMap<String, HashMap<String, Integer>> graphHashMap;
+    private LinkedHashMap<String, HashMap<String, Integer>> graphLinkedHashMap;
+
 
     // CONSTRUCTOR
-    public Graph(HashMap<String, HashMap<String, Integer>> graphHashMap) {
-        this.graphHashMap = graphHashMap;
+    public Graph(LinkedHashMap<String, HashMap<String, Integer>> graphLinkedHashMap) {
+        this.graphLinkedHashMap = graphLinkedHashMap;
     }
 
     public Graph() {
-        this(new HashMap<String, HashMap<String, Integer>>());
+        this(new LinkedHashMap<String, HashMap<String, Integer>>());
     }
 
     /**
@@ -66,7 +67,7 @@ public class Graph {
      * @param connectedNodes - хеш-таблица связанных узлов и весов ребер
      */
     public void putNode(String nodeName, HashMap<String, Integer> connectedNodes) {
-        graphHashMap.put(nodeName, connectedNodes);
+        graphLinkedHashMap.put(nodeName, connectedNodes);
     }
 
     /**
@@ -77,10 +78,13 @@ public class Graph {
      * @param nextNode   куда ребро идет
      */
     public void addLinkedNode(String sourceNode, Integer value, String nextNode) {
-        if (!graphHashMap.containsKey(sourceNode)) {
+        if (!graphLinkedHashMap.containsKey(sourceNode)) {
             putNode(sourceNode);
         }
-        graphHashMap.get(sourceNode).put(nextNode, value);
+        if (!graphLinkedHashMap.containsKey(nextNode)) {
+            putNode(nextNode);
+        }
+        graphLinkedHashMap.get(sourceNode).put(nextNode, value);
     }
 
     /**
@@ -91,19 +95,22 @@ public class Graph {
      */
     public LinkedNodes getLinkedNodes(String nodeName) {
         LinkedNodes linkedNodes = new LinkedNodes();
-        HashMap<String, Integer> linkedNodesHashMap = graphHashMap.get(nodeName);
 
-        Iterator iterator = linkedNodesHashMap.keySet().iterator();
-        //noinspection WhileLoopReplaceableByForEach
-        while (iterator.hasNext()) {
-            //noinspection unchecked
-            Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) iterator.next();
-            linkedNodes.addLink(entry.getKey(), entry.getValue());
-        }
+        linkedNodes.addLinks(graphLinkedHashMap.get(nodeName));
+
+//        Iterator iterator = linkedNodesHashMap.keySet().iterator();
+//        //noinspection WhileLoopReplaceableByForEach
+//        while (iterator.hasNext()) {
+//            //noinspection unchecked
+//            Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) iterator.next();
+//            linkedNodes.addLink(entry.getKey(), entry.getValue());
+//        }
+
+
         return linkedNodes;
     }
 
     public Iterator getIterator() {
-        return graphHashMap.keySet().iterator();
+        return graphLinkedHashMap.keySet().iterator();
     }
 }

@@ -65,4 +65,7 @@ public class LinkedNodes {
         linkedNodes.put(destinationNode, weight);
     }
 
+    public void addLinks(HashMap<String, Integer> linkedNodes) {
+        this.linkedNodes = linkedNodes;
+    }
 }

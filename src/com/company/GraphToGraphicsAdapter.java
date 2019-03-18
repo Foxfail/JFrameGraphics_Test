@@ -1,6 +1,8 @@
 package com.company;
 
 import java.awt.*;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Этот класс помогает перевести граф в его графическое представление
@@ -47,7 +49,7 @@ import java.awt.*;
 public class GraphToGraphicsAdapter {
     Graphics graphics;
     Graph graph;
-    Point circle1point;
+    Point circlePoint;
 
     // на самом деле это диаметр, надо както это поправить в классе Круг
     int radius = 20;
@@ -65,7 +67,7 @@ public class GraphToGraphicsAdapter {
     public GraphToGraphicsAdapter(Graph graph, Graphics graphics, Point firstElemPos) {
         this.graph = graph;
         this.graphics = graphics;
-        this.circle1point = firstElemPos;
+        this.circlePoint = firstElemPos;
         firstElemPos.x = firstElemPos.x + 50;
     }
 
@@ -89,41 +91,104 @@ public class GraphToGraphicsAdapter {
     }
 
     public void testdraw() {
-        //TODO тут надо понять алгоритм, как это всё загнать в цикл
-        // как упростить, может вынести какие то элементы в классы
-        // сейчас я думаю что надо круги вынести в отдельный стек массивов,
-        // и отрисовывать их по шагам. т.е. берем сверху первый элемент - это первый шаг, начало пути
-        // далее берем второй элемент стека - это будет массив с узлами прилегающими к первому узлу
-        // далее берем третий элемент стека - это будет массив с узлами прилегающими ко всем элементам из второго шага
-        // и вот тут начинаются проблемы, потому что надо хранить, отрисовывать связи, между узлами
-        // либо их надо записывать в отдельный стек и рисовать потом
-        // (на самом деле рисовать надо первыми связи, а потом узлы, чтобы можно было ребро отрисовать от центра
-        // узла до другого центра узла - так красивее) либо рисовать всё вместе, либо рисовать сначала одну ветку,
-        // затем другую, но как в таком случае отобразить связи к одинаковым узлам?
+//        //TODO тут надо понять алгоритм, как это всё загнать в цикл
+//        // как упростить, может вынести какие то элементы в классы
+//        // сейчас я думаю что надо круги вынести в отдельный стек массивов,
+//        // и отрисовывать их по шагам. т.е. берем сверху первый элемент - это первый шаг, начало пути
+//        // далее берем второй элемент стека - это будет массив с узлами прилегающими к первому узлу
+//        // далее берем третий элемент стека - это будет массив с узлами прилегающими ко всем элементам из второго шага
+//        // и вот тут начинаются проблемы, потому что надо хранить, отрисовывать связи, между узлами
+//        // либо их надо записывать в отдельный стек и рисовать потом
+//        // (на самом деле рисовать надо первыми связи, а потом узлы, чтобы можно было ребро отрисовать от центра
+//        // узла до другого центра узла - так красивее) либо рисовать всё вместе, либо рисовать сначала одну ветку,
+//        // затем другую, но как в таком случае отобразить связи к одинаковым узлам?
+//
+//        // круг 1
+//        Circle circle1 = new Circle(circlePoint, Color.RED);
+//        circle1.draw(graphics);
+//
+//        // круг 2
+//        // считаем центр для круга 2 на основании координат первого круга
+//        Point circle2point = new Point(circlePoint.x + stepX, circlePoint.y - stepY);
+//        Circle circle2 = new Circle(circle2point, Color.GREEN);
+//        circle2.draw(graphics);
+//
+//        // линия от первого круга до второго
+//        MyLine line1 = new MyLine(circle1, circle2);
+//        line1.draw(graphics);
+//
+//        // круг 3
+//        Point circle3point = new Point(circle2point.x, circlePoint.y + stepY);
+//        Circle circle3 = new Circle(circle3point, Color.CYAN);
+//        circle3.draw(graphics);
+//
+//        // линия от круга 1 до круга 3
+//        MyLine line2 = new MyLine(circle1, circle3);
+//        line2.draw(graphics);
 
-        // круг 1
-        Circle circle1 = new Circle(circle1point, Color.RED);
-        circle1.draw(graphics);
+//
+//        Iterator iterator = graph.getIterator();
+//        LinkedNodes linkedNodes;
+//        while (iterator.hasNext()) {
+//            linkedNodes = graph.getLinkedNodes((String) iterator.next());
+//            assert linkedNodes != null;
+//            String[] destinationNodes = linkedNodes.getDestinationNodeNames();
+//
+//            for (int j = 0; j < destinationNodes.length; j++) {
+//                Circle circle = new Circle(circlePoint, Color.orange);
+//                circle.draw(graphics);
+//            }
+//        }
 
-        // круг 2
-        // считаем центр для круга 2 на основании координат первого круга
-        Point circle2point = new Point(circle1point.x + stepX, circle1point.y - stepY);
-        Circle circle2 = new Circle(circle2point, Color.GREEN);
-        circle2.draw(graphics);
+        // создаем переменные для цикла
+        Iterator iterator = graph.getIterator(); // итератор по графу
+        String currentNodeName = null;           // текущий узел, точнее его имя
+        LinkedNodes linkedNodes = null;          // связи с текущим узлом
+        LinkedList<Circle> previousCircles = new LinkedList<>();    // отрисованные на предыдущем шаге круги
 
-        // линия от первого круга до второго
-        MyLine line1 = new MyLine(circle1, circle2);
-        line1.draw(graphics);
+        while (iterator.hasNext()) {
+            if (linkedNodes == null) { // срабатывает на первом проходе
+                // Рисуем первый узел
+                // Получаем ид первого узла
+                currentNodeName = (String) iterator.next();
+                Circle circle1 = new Circle(circlePoint, Color.orange);
+                circle1.draw(graphics);
+                // Добавляем его в список чтобы от него рисовать связи к последующим узлам
+                previousCircles.add(circle1);
+            } else {
+                // Сначала думлируем список с которым будем работать
+                //noinspection unchecked
+                LinkedList<Circle> previousCirclesCopy = (LinkedList<Circle>) previousCircles.clone();
+                // И очищаем старый, который будем заполнять текущими узлами
+                previousCircles.clear();
 
-        // круг 3
-        Point circle3point = new Point(circle2point.x, circle1point.y + stepY);
-        Circle circle3 = new Circle(circle3point, Color.CYAN);
-        circle3.draw(graphics);
+                Circle currentCircle; // графическое представление узла
+                // В этом цикле для каждого связанного с текущим узла делам круг и рисуем его
+                for (String s : linkedNodes.getDestinationNodeNames()) {
+                    currentNodeName = s;
+                    // Сдвигаем точку выше
+                    circlePoint = new Point(circlePoint.x, circlePoint.y - stepY);
+                    // Создаем в точке новый круг и рисуем его
+                    currentCircle = new Circle(circlePoint, Color.RED);
+                    currentCircle.draw(graphics);
 
-        // линия от круга 1 до круга 3
-        MyLine line2 = new MyLine(circle1, circle3);
-        line2.draw(graphics);
+                    // отрисовываем все связи с предыдущими кругами
+                    for (Circle c : previousCirclesCopy) {
+                        MyLine line = new MyLine(c, currentCircle);
+                        line.draw(graphics);
+                    }
+                    // добавляем текущий круг в те, связи с которыми будут отрисованы на следующем шаге
+                    previousCircles.add(currentCircle);
+                }
+            }
 
+            // далее подготовка к следующему шагу графа
 
+            // высчитываем координаты новой точки, основанные на предыдущей
+            // пока что просто сдвигаю точку вправо и вниз
+            circlePoint = new Point(circlePoint.x + stepX, circlePoint.y + stepY);
+            // заполняем список связанных узлов
+            linkedNodes = graph.getLinkedNodes(currentNodeName);
+        }
     }
 }

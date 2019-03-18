@@ -15,8 +15,8 @@ public class Main {
         graph.putNode("first");
         graph.addLinkedNode("first", 3, "secondFromFirst");
         graph.addLinkedNode("first", 4, "thirdFromFirst");
-        graph.addLinkedNode("secondFromFirst", 5, "ForthFromSecond");
-        graph.addLinkedNode("thirdFromFirst", 7, "ForthFromThird");
+        graph.addLinkedNode("secondFromFirst", 5, "Forth");
+        graph.addLinkedNode("thirdFromFirst", 7, "Forth");
 
         myJFrame.setOnButtonClickListener(new AbstractAction() {
             @Override
